@@ -168,5 +168,7 @@ if submit_button:
     binary_predictions = np.where(prediction > threshold, 1, 0)
     
     st.markdown('-----')
-    if prediction:
+    if binary_predictions:
         st.write('prediction is true')
+    else:
+        st.write('prediction is false')
