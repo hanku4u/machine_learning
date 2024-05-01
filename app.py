@@ -164,7 +164,7 @@ if submit_button:
         st.write(f"Total Personal Fouls: {prediction_data['opp_PF'].iloc[0].round(2)}")
     
     prediction = model.predict(prediction_data)
-    threshold = 0.5
+    threshold = 0.8
     binary_predictions = np.where(prediction > threshold, 1, 0)
     
     st.markdown('-----')
