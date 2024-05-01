@@ -1,13 +1,12 @@
 import streamlit as st
-import pickle
+from joblib import load
+import numpy as np
 import pandas as pd
 
 # Load your model (Update path and method according to your model type)
 @st.cache_data()
 def load_model():
-    with open('voting_regressor.pkl', 'rb') as file:
-        model = pickle.load(file)
-    return model
+    return load('voting_regressor.pkl')
 
 def create_game_helper(
         teamID_1: int,
@@ -165,6 +164,8 @@ if submit_button:
         st.write(f"Total Personal Fouls: {prediction_data['opp_PF'].iloc[0].round(2)}")
     
     prediction = model.predict(prediction_data)
+    threshold = 0.5
+    binary_predictions = np.where(prediction > threshold, 1, 0)
     
     st.markdown('-----')
     if prediction:
