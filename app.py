@@ -48,8 +48,8 @@ def create_game_helper(
 model = load_model()
 
 # Teams for Men's and Women's basketball
-m_teams = pd.read_csv('./data/MTeams.csv')
-w_teams = pd.read_csv('./data/WTeams.csv')
+m_teams = pd.read_csv('./MTeams.csv')
+w_teams = pd.read_csv('./WTeams.csv')
 
 # Load Home, Away and Neutral location game aggregations
 home_data = pd.read_csv('./home_game_aggregations.csv')
