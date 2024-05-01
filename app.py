@@ -170,5 +170,9 @@ if submit_button:
     st.markdown('-----')
     if binary_predictions == 1:
         st.write('prediction is true')
+        st.write(prediction)
+        st.write(binary_predictions)
     else:
         st.write('prediction is false')
+        st.write(prediction)
+        st.write(binary_predictions)
