@@ -136,11 +136,11 @@ if submit_button:
     
     st.markdown('-----')
     if binary_predictions:
-        st.write('if statement is true')
+        st.write('Prediciton is true')
         st.header(f'{home_team} is the predicted winner')
     
     elif not binary_predictions:
-        st.write('if statement is false')
+        st.write('Prediction is false')
         st.header(f'{away_team} is the predicted winner')
 
     st.markdown('---')
