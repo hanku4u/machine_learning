@@ -1,4 +1,5 @@
 import streamlit as st
+from sklearn.preprocessing import StandardScaler
 from joblib import load
 import numpy as np
 import pandas as pd
@@ -6,6 +7,7 @@ import pandas as pd
 # Load your model (Update path and method according to your model type)
 @st.cache_data()
 def load_model():
+    # return load('voting_classifier.pkl')
     return load('voting_regressor.pkl')
 
 def create_game_helper(
@@ -42,13 +44,27 @@ def create_game_helper(
     predict_game['Loc_H'] = False
     predict_game['Loc_N'] = True
 
+    # reorder columns to match training data
+    predict_game = predict_game[[
+        'TeamID','Score','FGM','FGA','FGM3','FGA3','FTM','FTA','OR','DR','Ast','TO','Stl',
+        'Blk','PF','Loc_A','Loc_H','Loc_N','opp_TeamID','opp_Score','opp_FGM','opp_FGA','opp_FGM3',
+        'opp_FGA3','opp_FTM','opp_FTA','opp_OR','opp_DR','opp_Ast','opp_TO','opp_Stl','opp_Blk','opp_PF'
+    ]]
+
     return predict_game
+
+# initialize a standard scaler and scale it on the training data
+scaler = StandardScaler()
+
+# Fit the scaler on the training data
+training_data = pd.read_csv('./training_data.csv')
+scaler.fit(training_data)
 
 model = load_model()
 
 # Teams for Men's and Women's basketball
-m_teams = pd.read_csv('./MTeams.csv')
-w_teams = pd.read_csv('./WTeams.csv')
+m_teams = pd.read_csv('./data/MTeams.csv')
+w_teams = pd.read_csv('./data/WTeams.csv')
 
 # Load Home, Away and Neutral location game aggregations
 home_data = pd.read_csv('./home_game_aggregations.csv')
@@ -112,10 +128,22 @@ if submit_button:
         team2_data=team2_data
     )
 
-    # st.write("team1: ", team1_ID)
-    # st.write("team2: ", team2_ID)
+    pred_scaled = scaler.transform(prediction_data)
+    prediction = model.predict(pred_scaled)
+    threshold = 0.5
+    binary_predictions = np.where(prediction > threshold, 1, 0)
+    binary_predictions = binary_predictions.astype(bool)
+    
+    st.markdown('-----')
+    if binary_predictions:
+        st.write('if statement is true')
+        st.header(f'{home_team} is the predicted winner')
+    
+    elif not binary_predictions:
+        st.write('if statement is false')
+        st.header(f'{away_team} is the predicted winner')
 
-
+    st.markdown('---')
     st.header('Data used to make prediction')
 
     col1, col2, col3 = st.columns([5, 1, 5])
@@ -162,17 +190,3 @@ if submit_button:
         st.write(f"Blocks: {prediction_data['opp_Blk'].iloc[0].round(2)}")
         st.write(f"Steals: {prediction_data['opp_Stl'].iloc[0].round(2)}")
         st.write(f"Total Personal Fouls: {prediction_data['opp_PF'].iloc[0].round(2)}")
-    
-    prediction = model.predict(prediction_data)
-    threshold = 0.5
-    binary_predictions = np.where(prediction > threshold, 1, 0)
-    
-    st.markdown('-----')
-    if binary_predictions == 1:
-        st.write('prediction is true')
-        st.write(prediction)
-        st.write(binary_predictions)
-    else:
-        st.write('prediction is false')
-        st.write(prediction)
-        st.write(binary_predictions)
