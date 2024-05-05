@@ -6,9 +6,11 @@ import pandas as pd
 
 # Load your model (Update path and method according to your model type)
 @st.cache_data()
-def load_model():
-    # return load('voting_classifier.pkl')
-    return load('voting_regressor.pkl')
+def load_model(model: str):
+    if model == 'Classifier':
+        return load('voting_classifier.pkl')
+    elif model == 'Regressor':
+        return load('voting_regressor.pkl')
 
 def create_game_helper(
         teamID_1: int,
@@ -53,14 +55,18 @@ def create_game_helper(
 
     return predict_game
 
+# Initialization of st.session_state properties if not already set
+if 'model' not in st.session_state:
+    st.session_state.model = None
+if 'model_type' not in st.session_state:
+    st.session_state['model_type'] = None
+
 # initialize a standard scaler and scale it on the training data
 scaler = StandardScaler()
 
 # Fit the scaler on the training data
 training_data = pd.read_csv('./training_data.csv')
 scaler.fit(training_data)
-
-model = load_model()
 
 # Teams for Men's and Women's basketball
 m_teams = pd.read_csv('./data/MTeams.csv')
@@ -81,6 +87,14 @@ st.markdown("""
         Dr. Sajjad Mohsin</h3>
     </div>
     """, unsafe_allow_html=True)
+
+st.markdown('---')
+colA, colB, colC = st.columns([5, 1, 8])
+with colA: 
+    model_selector = st.radio("Select the prediction Model", ('Classifier', 'Regressor'))
+    model = load_model(model_selector)
+with colC: 
+    st.success('Model loaded!')
 
 st.markdown('---')
 
@@ -129,18 +143,21 @@ if submit_button:
     )
 
     pred_scaled = scaler.transform(prediction_data)
-    prediction = model.predict(pred_scaled)
-    threshold = 0.5
-    binary_predictions = np.where(prediction > threshold, 1, 0)
-    binary_predictions = binary_predictions.astype(bool)
+
+    if model_selector == 'Regressor':
+        prediction = model.predict(pred_scaled)
+        threshold = 0.5
+        binary_predictions = np.where(prediction > threshold, 1, 0)
+        prediction = binary_predictions.astype(bool)
+
+    elif model_selector == 'Classifier':
+        prediction = model.predict(pred_scaled)
     
     st.markdown('-----')
-    if binary_predictions:
-        st.write('Prediciton is true')
+    if prediction:
         st.header(f'{home_team} is the predicted winner')
     
-    elif not binary_predictions:
-        st.write('Prediction is false')
+    elif not prediction:
         st.header(f'{away_team} is the predicted winner')
 
     st.markdown('---')
