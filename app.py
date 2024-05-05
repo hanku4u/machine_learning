@@ -91,15 +91,14 @@ st.markdown("""
 st.markdown('---')
 colA, colB, colC = st.columns([5, 1, 8])
 with colA: 
+    # select the model and mens or womens games
     model_selector = st.radio("Select the prediction Model", ('Classifier', 'Regressor'))
     model = load_model(model_selector)
 with colC: 
-    st.success('Model loaded!')
+    game_type = st.radio("Select Division", ('Men\'s Basketball', 'Women\'s Basketball'))
 
 st.markdown('---')
 
-# Selecting the type of game
-game_type = st.radio("Select the type of game", ('Men\'s Basketball', 'Women\'s Basketball'))
 
 # Updating teams based on game type selected
 if game_type == 'Men\'s Basketball':
