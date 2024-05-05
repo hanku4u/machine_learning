@@ -104,7 +104,7 @@ st.markdown('---')
 if game_type == 'Men\'s Basketball':
     teams = m_teams
     teams_list = m_teams['TeamName'].unique().tolist()
-    st.subheader("Means Teams Selected")
+    st.subheader("Mens Teams Selected")
 else:
     teams = w_teams
     teams_list = w_teams['TeamName'].unique().tolist()
