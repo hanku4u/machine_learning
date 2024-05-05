@@ -89,7 +89,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.markdown('---')
-colA, colB, colC = st.columns([5, 1, 8])
+colA, colB, colC = st.columns([5, 5, 5])
 with colA: 
     # select the model and mens or womens games
     model_selector = st.radio("Select the prediction Model", ('Classifier', 'Regressor'))
