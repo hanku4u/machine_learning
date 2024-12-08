@@ -2,3 +2,4 @@ tensorflow==2.18.0
 streamlit==1.40.1
 matplotlib
 joblib
+scikit-learn
