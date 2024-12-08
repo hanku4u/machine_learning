@@ -6,6 +6,9 @@ from helper_functions import *
 import joblib
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error
 
+# set random seed
+tf.random.set_seed(42)
+
 # Load scaler pickle files with joblib
 scaler = joblib.load('./ML_II_capstone/scalers/scaler.pkl')
 target_scaler = joblib.load('./ML_II_capstone/scalers/target_scaler.pkl')
@@ -16,7 +19,7 @@ custom_loss_fn = WeightedMSELoss(cd_targets=cd_targets, higher_weight=50.0, base
 # Load pre-trained model
 @st.cache_resource
 def load_model():
-    model = tf.keras.models.load_model('./models/trained_model.h5')
+    model = tf.keras.models.load_model('./ML_II_capstone/models/trained_model.h5')
     return model
 
 def main():
@@ -113,38 +116,6 @@ def main():
             fig_list = st_plot_helper(y_true=y_test_actual, y_pred=y_pred, cd_columns=cd_columns, cd_targets=cd_targets)
             for fig in fig_list:
                 st.pyplot(fig)
-
-            # Plotting predictions using Plotly
-            # fig = go.Figure()
-            # for i, cd in enumerate(cd_columns):
-            #     fig.add_trace(go.Scatter(
-            #         x=np.arange(len(y_pred[:, i])),
-            #         y=y_pred[:, i],
-            #         mode='markers',
-            #         name=f'Predicted {cd}',
-            #         marker=dict(
-            #             symbol='circle',
-            #             color='green',
-            #             size=8
-            #         )
-            #     ))
-
-            #     # Check if the user wants to see the true values
-            #     if st.checkbox(f"Show True Values for {cd}", key=f'show_true_{cd}'):
-            #         fig.add_trace(go.Scatter(
-            #             x=np.arange(len(y_test_actual[:, i])),
-            #             y=y_test_actual[:, i],
-            #             mode='markers',
-            #             name=f'True {cd}',
-            #             marker=dict(
-            #                 symbol='cross',
-            #                 color='red',
-            #                 size=8
-            #             )
-            #         ))
-
-            # fig.update_layout(title="Predicted vs True Values", xaxis_title="Data Point Index", yaxis_title="Value")
-            # st.plotly_chart(fig)
 
 if __name__ == "__main__":
     main()
