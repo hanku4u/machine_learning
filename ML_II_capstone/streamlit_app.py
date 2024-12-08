@@ -2,6 +2,7 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 from custom_loss import WeightedMSELoss
+from tensorflow.keras.layers import LeakyReLU
 from helper_functions import *
 import joblib
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error
@@ -19,7 +20,7 @@ custom_loss_fn = WeightedMSELoss(cd_targets=cd_targets, higher_weight=50.0, base
 # Load pre-trained model
 @st.cache_resource
 def load_model():
-    model = tf.keras.models.load_model('./ML_II_capstone/models/trained_model.h5')
+    model = tf.keras.models.load_model('./ML_II_capstone/models/trained_model.h5', custom_objects={'LeakyReLU': LeakyReLU})
     return model
 
 def main():
