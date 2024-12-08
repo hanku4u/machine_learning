@@ -7,8 +7,8 @@ import joblib
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error
 
 # Load scaler pickle files with joblib
-scaler = joblib.load('./scalers/scaler.pkl')
-target_scaler = joblib.load('./scalers/target_scaler.pkl')
+scaler = joblib.load('./ML_II_capstone/scalers/scaler.pkl')
+target_scaler = joblib.load('./ML_II_capstone/scalers/target_scaler.pkl')
 
 # create instance of custom loss function. needed to load the model
 custom_loss_fn = WeightedMSELoss(cd_targets=cd_targets, higher_weight=50.0, base_weight=1.0)
