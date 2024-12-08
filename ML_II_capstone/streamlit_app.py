@@ -7,9 +7,6 @@ from helper_functions import *
 import joblib
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error
 
-# set random seed
-tf.random.set_seed(42)
-
 # Load scaler pickle files with joblib
 scaler = joblib.load('./ML_II_capstone/scalers/scaler.pkl')
 target_scaler = joblib.load('./ML_II_capstone/scalers/target_scaler.pkl')
